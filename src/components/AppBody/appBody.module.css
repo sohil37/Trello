@@ -1,0 +1,9 @@
+.root {
+  margin-top: 2rem;
+}
+
+.columnsContainer {
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+}
