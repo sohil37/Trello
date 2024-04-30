@@ -23,7 +23,7 @@ function Navbar() {
             aria-label="add card button"
             color="inherit"
             onClick={() => {
-              dispatch(showAddCardModal());
+              dispatch(showAddCardModal({ purpose: "add" }));
             }}
           >
             <AddBoxSharpIcon />

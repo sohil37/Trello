@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -18,17 +18,29 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-import { modalConfig } from "../../config/modalConfig";
-import { addCard, closeAddCardModal } from "../../redux/reducers/appDataSlice";
+import { appConfig } from "../../config/appConfig";
+import {
+  addCard,
+  closeAddCardModal,
+  deleteCard,
+} from "../../redux/reducers/appDataSlice";
 import { RootState } from "../../redux/store/store";
-import { Column } from "../../types/Type";
+import { CardData, Column } from "../../types/Type";
 import styles from "./addCardModal.module.css";
 
 /* Constants */
-const COLUMNS = modalConfig.columns;
-const TITLEREGEX = modalConfig.titleRegex;
+const COLUMNS = appConfig.columns;
+const TITLEREGEX = appConfig.titleRegex;
+const APPDATAKEY = appConfig.appDataKey;
 
 function AddCardModal() {
+  /* ============== Redux State Selector ===============*/
+  const addCardModalState = useSelector(
+    (state: RootState) => state.appState.uiState.addCardModal
+  );
+  const open = addCardModalState.visible;
+  const purpose = addCardModalState.purpose;
+
   /* Modal Fields State */
   const [title, setTitle] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
@@ -46,20 +58,32 @@ function AddCardModal() {
   /* Redux Dispatcher */
   const dispatch = useDispatch();
 
-  // Redux State Selector
-  const addCardModalState = useSelector(
-    (state: RootState) => state.appState.uiState.addCardModal
-  );
-  const open = addCardModalState.visible;
-
   /* Core Functions */
   const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
     try {
       event.preventDefault();
       if (validateFormInputs()) {
-        const cardData = { title, desc };
-        dispatch(addCard({ cardData, column }));
+        const cardData = { title, desc, column };
+        dispatch(addCard({ cardData }));
         resetModal();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = () => {
+    try {
+      if (purpose === "edit" && addCardModalState.editCardInfo) {
+        dispatch(
+          deleteCard({
+            column: addCardModalState.editCardInfo.column,
+            index: addCardModalState.editCardInfo.index,
+          })
+        );
+        resetModal();
+      } else {
+        console.error("Something went wrong.");
       }
     } catch (error) {
       console.error(error);
@@ -113,6 +137,38 @@ function AddCardModal() {
       console.error(error);
     }
   };
+
+  /* Hooks */
+  useEffect(() => {
+    try {
+      let useDefault = true;
+      // setting modal fields for edit card
+      if (purpose === "edit" && addCardModalState.editCardInfo) {
+        let editCardInfo = addCardModalState.editCardInfo;
+        const appDataString = localStorage.getItem(APPDATAKEY);
+        if (appDataString) {
+          const appData = JSON.parse(appDataString);
+          const cardData: CardData =
+            appData[editCardInfo.column][editCardInfo.index];
+          setTitle(cardData.title);
+          setDesc(cardData.desc);
+          setColumn(cardData.column);
+          useDefault = false;
+        }
+      }
+      // setting modal fields for add card
+      if (useDefault) {
+        setTitle("");
+        setDesc("");
+        setColumn("");
+      }
+      setShowTitleError(false);
+      setShowDescError(false);
+      setShowColumnError(false);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [purpose]);
 
   return (
     <Dialog fullScreen={fullScreen} open={open}>
@@ -191,6 +247,11 @@ function AddCardModal() {
           </FormControl>
         </DialogContent>
         <DialogActions>
+          {purpose === "edit" && (
+            <Button onClick={handleDelete} color="error">
+              Delete
+            </Button>
+          )}
           <Button onClick={closeModal}>Close</Button>
           <Button type="submit" autoFocus>
             Submit
