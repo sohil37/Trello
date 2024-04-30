@@ -36,6 +36,7 @@ export const appStateSlice = createSlice({
     addCard: (state: AppState, action: PayloadAction<AddCardAction>) => {
       try {
         let newAppData = Object.assign({}, state.appData);
+        action.payload.cardData.id = Date.now().toString();
         newAppData[action.payload.cardData.column as keyof AppData].push(
           action.payload.cardData
         );

@@ -1,16 +1,17 @@
 // Common Types
-export type Column = "left" | "center" | "right" | "";
+export type ColumnType = "left" | "center" | "right" | "";
 
 export type CardData = {
   title: string;
   desc: string;
-  column: Column;
+  column: ColumnType;
+  id?: string;
 };
 
 export type AddCardModalPurpose = "edit" | "add";
 
 export type EditCardInfo = {
-  column: Column;
+  column: ColumnType;
   index: number;
 };
 
@@ -40,14 +41,14 @@ export type AddCardAction = {
 };
 
 export type DeleteCardAction = {
-  column: Column;
+  column: ColumnType;
   index: number;
 };
 
 export type UpdateCardAction = {
   cardData: CardData;
   prevIndex: number;
-  prevColumn: Column;
+  prevColumn: ColumnType;
 };
 
 export type ShowAddCardModalAction = {

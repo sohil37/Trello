@@ -2,8 +2,18 @@
   margin-top: 2rem;
 }
 
-.columnsContainer {
-  display: flex;
-  gap: 2rem;
-  justify-content: space-between;
+.columnContainer {
+  padding: 1rem;
+}
+
+.leftColumnContainer {
+  background-color: red;
+}
+
+.centerColumnContainer {
+  background-color: green;
+}
+
+.rightColumnContainer {
+  background-color: blue;
 }

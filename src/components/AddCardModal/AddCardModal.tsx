@@ -26,7 +26,7 @@ import {
   updateCard,
 } from "../../redux/reducers/appDataSlice";
 import { RootState } from "../../redux/store/store";
-import { CardData, Column } from "../../types/Type";
+import { CardData, ColumnType } from "../../types/Type";
 import styles from "./addCardModal.module.css";
 
 /* Constants */
@@ -45,7 +45,8 @@ function AddCardModal() {
   /* Modal Fields State */
   const [title, setTitle] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
-  const [column, setColumn] = useState<Column>("");
+  const [column, setColumn] = useState<ColumnType>("");
+  const [id, setId] = useState<string>("");
 
   /* Modal Fields Error State  */
   const [showTitleError, setShowTitleError] = useState<boolean>(false);
@@ -64,7 +65,7 @@ function AddCardModal() {
     try {
       event.preventDefault();
       if (validateFormInputs()) {
-        const cardData = { title, desc, column };
+        const cardData = { title, desc, column, id };
         if (purpose === "edit" && addCardModalState.editCardInfo) {
           dispatch(
             updateCard({
@@ -164,6 +165,7 @@ function AddCardModal() {
           setTitle(cardData.title);
           setDesc(cardData.desc);
           setColumn(cardData.column);
+          setId(cardData.id as string);
           useDefault = false;
         }
       }
@@ -241,7 +243,7 @@ function AddCardModal() {
               value={column}
               onChange={(event: SelectChangeEvent) => {
                 if (showColumnError) setShowColumnError(false);
-                setColumn(event.target.value as Column);
+                setColumn(event.target.value as ColumnType);
               }}
             >
               {COLUMNS.map((column) => (
