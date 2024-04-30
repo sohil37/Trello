@@ -23,6 +23,7 @@ import {
   addCard,
   closeAddCardModal,
   deleteCard,
+  updateCard,
 } from "../../redux/reducers/appDataSlice";
 import { RootState } from "../../redux/store/store";
 import { CardData, Column } from "../../types/Type";
@@ -64,7 +65,17 @@ function AddCardModal() {
       event.preventDefault();
       if (validateFormInputs()) {
         const cardData = { title, desc, column };
-        dispatch(addCard({ cardData }));
+        if (purpose === "edit" && addCardModalState.editCardInfo) {
+          dispatch(
+            updateCard({
+              cardData: cardData,
+              prevColumn: addCardModalState.editCardInfo.column,
+              prevIndex: addCardModalState.editCardInfo.index,
+            })
+          );
+        } else {
+          dispatch(addCard({ cardData }));
+        }
         resetModal();
       }
     } catch (error) {

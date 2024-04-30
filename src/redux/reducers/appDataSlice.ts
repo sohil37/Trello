@@ -7,6 +7,7 @@ import {
   AppState,
   DeleteCardAction,
   ShowAddCardModalAction,
+  UpdateCardAction,
 } from "../../types/Type";
 
 import type { PayloadAction } from "@reduxjs/toolkit";
@@ -57,6 +58,28 @@ export const appStateSlice = createSlice({
         console.error(error);
       }
     },
+    updateCard: (state: AppState, action: PayloadAction<UpdateCardAction>) => {
+      try {
+        let newAppData = Object.assign({}, state.appData);
+        if (action.payload.cardData.column === action.payload.prevColumn) {
+          newAppData[action.payload.prevColumn as keyof AppData][
+            action.payload.prevIndex
+          ] = action.payload.cardData;
+        } else {
+          newAppData[action.payload.prevColumn as keyof AppData].splice(
+            action.payload.prevIndex,
+            1
+          );
+          newAppData[action.payload.cardData.column as keyof AppData].push(
+            action.payload.cardData
+          );
+        }
+        localStorage.setItem(APPDATAKEY, JSON.stringify(newAppData));
+        state.appData = newAppData;
+      } catch (error) {
+        console.error(error);
+      }
+    },
     showAddCardModal: (
       state: AppState,
       action: PayloadAction<ShowAddCardModalAction>
@@ -89,7 +112,12 @@ export const appStateSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { addCard, deleteCard, showAddCardModal, closeAddCardModal } =
-  appStateSlice.actions; //exporting actions for each reducer logic
+export const {
+  addCard,
+  deleteCard,
+  updateCard,
+  showAddCardModal,
+  closeAddCardModal,
+} = appStateSlice.actions; //exporting actions for each reducer logic
 
 export default appStateSlice.reducer; //exporting counter reducer logics

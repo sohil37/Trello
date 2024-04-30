@@ -44,6 +44,12 @@ export type DeleteCardAction = {
   index: number;
 };
 
+export type UpdateCardAction = {
+  cardData: CardData;
+  prevIndex: number;
+  prevColumn: Column;
+};
+
 export type ShowAddCardModalAction = {
   purpose: AddCardModalPurpose;
   editCardInfo?: EditCardInfo;
