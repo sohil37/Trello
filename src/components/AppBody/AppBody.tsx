@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Container, Grid } from "@mui/material";
 
-import { updateCard } from "../../redux/reducers/appDataSlice";
+import { changeColumnBg, updateCard } from "../../redux/reducers/appDataSlice";
 import { RootState } from "../../redux/store/store";
 import { AppData, ColumnType } from "../../types/Type";
 import Column from "../Column/Column";
@@ -14,13 +14,13 @@ function AppBody() {
 
   const appData = useSelector((state: RootState) => state.appState.appData);
 
+  /* Core Functions */
   const handleOnDragEnd = (result: DropResult) => {
     try {
       if (
         result.destination &&
         result.source.droppableId != result.destination.droppableId
       ) {
-        console.log(result);
         const sourceColumn = result.source.droppableId as ColumnType;
         const sourceColumnIndex = result.source.index;
         const destColumn = result.destination.droppableId as ColumnType;
@@ -37,6 +37,107 @@ function AppBody() {
           })
         );
       }
+
+      functionResetColumnBg();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleOnDragUpdate = (result: DropResult) => {
+    try {
+      updateColumnBg(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /* Utility Functions */
+  const functionResetColumnBg = () => {
+    try {
+      dispatch(
+        changeColumnBg({
+          column: "left",
+          color: "grey",
+        })
+      );
+      dispatch(
+        changeColumnBg({
+          column: "center",
+          color: "grey",
+        })
+      );
+      dispatch(
+        changeColumnBg({
+          column: "right",
+          color: "grey",
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateColumnBg = (result: DropResult) => {
+    try {
+      if (result.destination?.droppableId === "left") {
+        dispatch(
+          changeColumnBg({
+            column: "left",
+            color: "blue",
+          })
+        );
+        dispatch(
+          changeColumnBg({
+            column: "center",
+            color: "grey",
+          })
+        );
+        dispatch(
+          changeColumnBg({
+            column: "right",
+            color: "grey",
+          })
+        );
+      } else if (result.destination?.droppableId === "center") {
+        dispatch(
+          changeColumnBg({
+            column: "left",
+            color: "grey",
+          })
+        );
+        dispatch(
+          changeColumnBg({
+            column: "center",
+            color: "blue",
+          })
+        );
+        dispatch(
+          changeColumnBg({
+            column: "right",
+            color: "grey",
+          })
+        );
+      } else {
+        dispatch(
+          changeColumnBg({
+            column: "left",
+            color: "grey",
+          })
+        );
+        dispatch(
+          changeColumnBg({
+            column: "center",
+            color: "grey",
+          })
+        );
+        dispatch(
+          changeColumnBg({
+            column: "right",
+            color: "blue",
+          })
+        );
+      }
     } catch (error) {
       console.error(error);
     }
@@ -44,45 +145,36 @@ function AppBody() {
 
   return (
     <Container className={styles.root}>
-      <DragDropContext onDragEnd={handleOnDragEnd}>
+      <DragDropContext
+        onDragEnd={handleOnDragEnd}
+        onDragUpdate={handleOnDragUpdate}
+      >
         <Grid container spacing={2} className={styles.columnsContainer}>
-          <Grid item sm={6} md={4}>
+          <Grid item xs={6} sm={6} md={4}>
             <Droppable droppableId="left">
               {(provided) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className={`${styles.leftColumnContainer} ${styles.columnContainer}`}
-                >
-                  <Column data={appData.left}></Column>
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  <Column data={appData.left} columnName="left"></Column>
                   {provided.placeholder}
                 </div>
               )}
             </Droppable>
           </Grid>
-          <Grid item sm={6} md={4}>
+          <Grid item xs={6} sm={6} md={4}>
             <Droppable droppableId="center">
               {(provided) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className={`${styles.centerColumnContainer} ${styles.columnContainer}`}
-                >
-                  <Column data={appData.center}></Column>
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  <Column data={appData.center} columnName="center"></Column>
                   {provided.placeholder}
                 </div>
               )}
             </Droppable>
           </Grid>
-          <Grid item sm={6} md={4}>
+          <Grid item xs={6} sm={6} md={4}>
             <Droppable droppableId="right">
               {(provided) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className={`${styles.rightColumnContainer} ${styles.columnContainer}`}
-                >
-                  <Column data={appData.right}></Column>
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  <Column data={appData.right} columnName="right"></Column>
                   {provided.placeholder}
                 </div>
               )}

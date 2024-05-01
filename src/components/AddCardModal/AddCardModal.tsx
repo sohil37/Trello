@@ -186,12 +186,13 @@ function AddCardModal() {
   return (
     <Dialog fullScreen={fullScreen} open={open}>
       <DialogTitle>Add Card</DialogTitle>
-      <form
-        onSubmit={(event: FormEvent<HTMLFormElement>) => {
-          handleFormSubmit(event);
-        }}
-      >
-        <DialogContent className={styles.dialogContent}>
+      <DialogContent className={styles.dialogContent} style={{ paddingTop: 0 }}>
+        <form
+          onSubmit={(event: FormEvent<HTMLFormElement>) => {
+            handleFormSubmit(event);
+          }}
+          id="addCardForm"
+        >
           <TextField
             required
             margin="normal"
@@ -258,19 +259,19 @@ function AddCardModal() {
               </FormHelperText>
             )}
           </FormControl>
-        </DialogContent>
-        <DialogActions>
-          {purpose === "edit" && (
-            <Button onClick={handleDelete} color="error">
-              Delete
-            </Button>
-          )}
-          <Button onClick={closeModal}>Close</Button>
-          <Button type="submit" autoFocus>
-            Submit
+        </form>
+      </DialogContent>
+      <DialogActions>
+        {purpose === "edit" && (
+          <Button onClick={handleDelete} color="error">
+            Delete
           </Button>
-        </DialogActions>
-      </form>
+        )}
+        <Button onClick={closeModal}>Close</Button>
+        <Button type="submit" form="addCardForm" autoFocus>
+          Submit
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 }

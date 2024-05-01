@@ -1,3 +1,4 @@
+import { blue, grey } from "@mui/material/colors";
 import { createSlice } from "@reduxjs/toolkit";
 
 import { appConfig } from "../../config/appConfig";
@@ -5,20 +6,30 @@ import {
   AddCardAction,
   AppData,
   AppState,
+  ChangeColumnBgAction,
+  ColumnUI,
   DeleteCardAction,
   ShowAddCardModalAction,
   UpdateCardAction,
 } from "../../types/Type";
 
 import type { PayloadAction } from "@reduxjs/toolkit";
-
 // Constants
 const APPDATAKEY = appConfig.appDataKey;
+const GREY = grey[50];
+const BLUE = blue[50];
 
 /* ============= Initialize state from local storage ================ */
 let initialState: AppState = {
   appData: { left: [], center: [], right: [] },
-  uiState: { addCardModal: { visible: false, purpose: "add" } },
+  uiState: {
+    addCardModal: { visible: false, purpose: "add" },
+    columns: {
+      left: { backgroundColor: GREY },
+      center: { backgroundColor: GREY },
+      right: { backgroundColor: GREY },
+    },
+  },
 };
 
 const appData = localStorage.getItem(APPDATAKEY);
@@ -109,6 +120,21 @@ export const appStateSlice = createSlice({
         console.error(error);
       }
     },
+    changeColumnBg: (state, action: PayloadAction<ChangeColumnBgAction>) => {
+      try {
+        if (action.payload.color === "grey") {
+          state.uiState.columns[
+            action.payload.column as keyof ColumnUI
+          ].backgroundColor = GREY;
+        } else {
+          state.uiState.columns[
+            action.payload.column as keyof ColumnUI
+          ].backgroundColor = BLUE;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 });
 
@@ -119,6 +145,7 @@ export const {
   updateCard,
   showAddCardModal,
   closeAddCardModal,
+  changeColumnBg,
 } = appStateSlice.actions; //exporting actions for each reducer logic
 
 export default appStateSlice.reducer; //exporting counter reducer logics

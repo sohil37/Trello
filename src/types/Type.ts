@@ -1,3 +1,5 @@
+import { blue, grey } from "@mui/material/colors";
+
 // Common Types
 export type ColumnType = "left" | "center" | "right" | "";
 
@@ -15,6 +17,22 @@ export type EditCardInfo = {
   index: number;
 };
 
+export type Colors = (typeof grey)[50] | (typeof blue)[50];
+
+export type ColumnColor = "grey" | "blue";
+
+export type ColumnUI = {
+  left: {
+    backgroundColor: Colors;
+  };
+  center: {
+    backgroundColor: Colors;
+  };
+  right: {
+    backgroundColor: Colors;
+  };
+};
+
 // Redux State Types
 export type AppData = {
   left: CardData[];
@@ -28,6 +46,7 @@ export type UIState = {
     purpose: AddCardModalPurpose;
     editCardInfo?: EditCardInfo;
   };
+  columns: ColumnUI;
 };
 
 export type AppState = {
@@ -54,4 +73,9 @@ export type UpdateCardAction = {
 export type ShowAddCardModalAction = {
   purpose: AddCardModalPurpose;
   editCardInfo?: EditCardInfo;
+};
+
+export type ChangeColumnBgAction = {
+  column: ColumnType;
+  color: ColumnColor;
 };
