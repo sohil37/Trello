@@ -8,4 +8,5 @@ export const appConfig: AppConfig = {
   appDataKey: "appData",
   greyBg: grey[50],
   blueBg: blue[50],
+  navbarTitle: "Trello",
 };

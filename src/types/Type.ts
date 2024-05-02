@@ -87,6 +87,7 @@ type AppConfig = {
   appDataKey: string;
   greyBg: Colors;
   blueBg: Colors;
+  navbarTitle: string;
 };
 
 export type {

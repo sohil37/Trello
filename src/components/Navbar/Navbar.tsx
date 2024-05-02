@@ -6,7 +6,11 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
+import { appConfig } from "../../config/appConfig";
 import { showAddCardModal } from "../../redux/reducers/appDataSlice";
+
+/* Constants */
+const navbarTitle = appConfig.navbarTitle;
 
 function Navbar() {
   /* Redux Dispatcher */
@@ -17,7 +21,7 @@ function Navbar() {
       <Container>
         <Toolbar disableGutters>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Trello
+            {navbarTitle}
           </Typography>
           <Tooltip arrow title="Add new card">
             <IconButton
