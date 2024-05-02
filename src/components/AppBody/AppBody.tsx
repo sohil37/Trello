@@ -1,4 +1,9 @@
-import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  DragUpdate,
+  Droppable,
+  DropResult,
+} from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Container, Grid } from "@mui/material";
@@ -42,7 +47,7 @@ function AppBody() {
     }
   };
 
-  const updateColumnBg = (result: DropResult) => {
+  const updateColumnBg = (result: DragUpdate) => {
     try {
       if (result.destination?.droppableId === "left") {
         dispatch(
@@ -137,7 +142,7 @@ function AppBody() {
     }
   };
 
-  const handleOnDragUpdate = (result: DropResult) => {
+  const handleOnDragUpdate = (result: DragUpdate) => {
     try {
       updateColumnBg(result);
     } catch (error) {
