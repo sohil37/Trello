@@ -11,10 +11,12 @@ import CustomCard from "../CustomCard/CustomCard";
 import styles from "./column.module.css";
 
 function Column(props: { data: CardData[]; columnName: ColumnType }) {
+  /* Getting App State from Redux Store */
+  const appState = useSelector((state: RootState) => state.appState);
+
+  /* Media Query */
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down("md"));
-
-  const appState = useSelector((state: RootState) => state.appState);
 
   return (
     <Card

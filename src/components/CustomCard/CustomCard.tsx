@@ -12,7 +12,10 @@ import { CardData } from "../../types/Type";
 import styles from "./customCard.module.css";
 
 function CustomCard(props: { data: CardData; index: number }) {
+  /* Redux Dispatcher */
   const dispatch = useDispatch();
+
+  /* Media Query */
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down("md"));
 

@@ -27,7 +27,6 @@ import {
 } from "../../redux/reducers/appDataSlice";
 import { RootState } from "../../redux/store/store";
 import { CardData, ColumnType } from "../../types/Type";
-import styles from "./addCardModal.module.css";
 
 /* Constants */
 const COLUMNS = appConfig.columns;
@@ -35,7 +34,10 @@ const TITLEREGEX = appConfig.titleRegex;
 const APPDATAKEY = appConfig.appDataKey;
 
 function AddCardModal() {
-  /* ============== Redux State Selector ===============*/
+  /* Redux Dispatcher */
+  const dispatch = useDispatch();
+
+  /* Getting Modal State from Redux Store */
   const addCardModalState = useSelector(
     (state: RootState) => state.appState.uiState.addCardModal
   );
@@ -53,54 +55,9 @@ function AddCardModal() {
   const [showDescError, setShowDescError] = useState<boolean>(false);
   const [showColumnError, setShowColumnError] = useState<boolean>(false);
 
-  /* Modal UI State */
+  /* Media Query */
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-
-  /* Redux Dispatcher */
-  const dispatch = useDispatch();
-
-  /* Core Functions */
-  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
-    try {
-      event.preventDefault();
-      if (validateFormInputs()) {
-        const cardData = { title, desc, column, id };
-        if (purpose === "edit" && addCardModalState.editCardInfo) {
-          dispatch(
-            updateCard({
-              cardData: cardData,
-              prevColumn: addCardModalState.editCardInfo.column,
-              prevIndex: addCardModalState.editCardInfo.index,
-            })
-          );
-        } else {
-          dispatch(addCard({ cardData }));
-        }
-        resetModal();
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleDelete = () => {
-    try {
-      if (purpose === "edit" && addCardModalState.editCardInfo) {
-        dispatch(
-          deleteCard({
-            column: addCardModalState.editCardInfo.column,
-            index: addCardModalState.editCardInfo.index,
-          })
-        );
-        resetModal();
-      } else {
-        console.error("Something went wrong.");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   /* Utility Functions */
   const validateFormInputs = () => {
@@ -150,7 +107,49 @@ function AddCardModal() {
     }
   };
 
-  /* Hooks */
+  /* Core Functions */
+  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    try {
+      event.preventDefault();
+      if (validateFormInputs()) {
+        const cardData = { title, desc, column, id };
+        if (purpose === "edit" && addCardModalState.editCardInfo) {
+          dispatch(
+            updateCard({
+              cardData: cardData,
+              prevColumn: addCardModalState.editCardInfo.column,
+              prevIndex: addCardModalState.editCardInfo.index,
+            })
+          );
+        } else {
+          dispatch(addCard({ cardData }));
+        }
+        resetModal();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = () => {
+    try {
+      if (purpose === "edit" && addCardModalState.editCardInfo) {
+        dispatch(
+          deleteCard({
+            column: addCardModalState.editCardInfo.column,
+            index: addCardModalState.editCardInfo.index,
+          })
+        );
+        resetModal();
+      } else {
+        console.error("Something went wrong.");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /* Component did Update */
   useEffect(() => {
     try {
       let useDefault = true;
@@ -167,6 +166,10 @@ function AddCardModal() {
           setColumn(cardData.column);
           setId(cardData.id as string);
           useDefault = false;
+        } else {
+          throw new Error(
+            `Something went wrong when fetching data for key ${APPDATAKEY} from local storage.`
+          );
         }
       }
       // setting modal fields for add card
@@ -186,7 +189,7 @@ function AddCardModal() {
   return (
     <Dialog fullScreen={fullScreen} open={open}>
       <DialogTitle>Add Card</DialogTitle>
-      <DialogContent className={styles.dialogContent} style={{ paddingTop: 0 }}>
+      <DialogContent style={{ paddingTop: 0 }}>
         <form
           onSubmit={(event: FormEvent<HTMLFormElement>) => {
             handleFormSubmit(event);

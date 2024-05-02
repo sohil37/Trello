@@ -1,27 +1,48 @@
 import { blue, grey } from "@mui/material/colors";
 
-// Common Types
-export type ColumnType = "left" | "center" | "right" | "";
-
-export type CardData = {
+/* Common Types */
+type CardData = {
   title: string;
   desc: string;
   column: ColumnType;
   id?: string;
 };
 
-export type AddCardModalPurpose = "edit" | "add";
+type ColumnType = "left" | "center" | "right" | "";
 
-export type EditCardInfo = {
+type Colors = (typeof grey)[50] | (typeof blue)[50];
+
+type ColumnColor = "grey" | "blue";
+
+type AddCardModalPurpose = "edit" | "add";
+
+type EditCardInfo = {
   column: ColumnType;
   index: number;
 };
 
-export type Colors = (typeof grey)[50] | (typeof blue)[50];
+/* Redux State Types */
+type AppState = {
+  appData: AppData;
+  uiState: UIState;
+};
 
-export type ColumnColor = "grey" | "blue";
+type AppData = {
+  left: CardData[];
+  center: CardData[];
+  right: CardData[];
+};
 
-export type ColumnUI = {
+type UIState = {
+  addCardModal: {
+    visible: boolean;
+    purpose: AddCardModalPurpose;
+    editCardInfo?: EditCardInfo;
+  };
+  columns: ColumnUI;
+};
+
+type ColumnUI = {
   left: {
     backgroundColor: Colors;
   };
@@ -33,49 +54,56 @@ export type ColumnUI = {
   };
 };
 
-// Redux State Types
-export type AppData = {
-  left: CardData[];
-  center: CardData[];
-  right: CardData[];
-};
-
-export type UIState = {
-  addCardModal: {
-    visible: boolean;
-    purpose: AddCardModalPurpose;
-    editCardInfo?: EditCardInfo;
-  };
-  columns: ColumnUI;
-};
-
-export type AppState = {
-  appData: AppData;
-  uiState: UIState;
-};
-
-// Dispatcher Action Types
-export type AddCardAction = {
+/* Dispatcher Action Types */
+type AddCardAction = {
   cardData: CardData;
 };
 
-export type DeleteCardAction = {
+type DeleteCardAction = {
   column: ColumnType;
   index: number;
 };
 
-export type UpdateCardAction = {
+type UpdateCardAction = {
   cardData: CardData;
   prevIndex: number;
   prevColumn: ColumnType;
 };
 
-export type ShowAddCardModalAction = {
+type ShowAddCardModalAction = {
   purpose: AddCardModalPurpose;
   editCardInfo?: EditCardInfo;
 };
 
-export type ChangeColumnBgAction = {
+type ChangeColumnBgAction = {
   column: ColumnType;
   color: ColumnColor;
+};
+
+/* App Config Type */
+type AppConfig = {
+  columns: ColumnType[];
+  titleRegex: RegExp;
+  appDataKey: string;
+  greyBg: Colors;
+  blueBg: Colors;
+};
+
+export type {
+  ColumnType,
+  CardData,
+  AddCardModalPurpose,
+  EditCardInfo,
+  Colors,
+  ColumnColor,
+  ColumnUI,
+  AppData,
+  UIState,
+  AppState,
+  AddCardAction,
+  DeleteCardAction,
+  UpdateCardAction,
+  ShowAddCardModalAction,
+  ChangeColumnBgAction,
+  AppConfig,
 };

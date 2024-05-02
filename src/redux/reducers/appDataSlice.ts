@@ -1,4 +1,3 @@
-import { blue, grey } from "@mui/material/colors";
 import { createSlice } from "@reduxjs/toolkit";
 
 import { appConfig } from "../../config/appConfig";
@@ -14,20 +13,21 @@ import {
 } from "../../types/Type";
 
 import type { PayloadAction } from "@reduxjs/toolkit";
-// Constants
-const APPDATAKEY = appConfig.appDataKey;
-const GREY = grey[50];
-const BLUE = blue[50];
 
-/* ============= Initialize state from local storage ================ */
+/* Constants */
+const APPDATAKEY = appConfig.appDataKey;
+const GREYBG = appConfig.greyBg;
+const BLUEBG = appConfig.blueBg;
+
+/* ============= Initializing state from local storage ================ */
 let initialState: AppState = {
   appData: { left: [], center: [], right: [] },
   uiState: {
     addCardModal: { visible: false, purpose: "add" },
     columns: {
-      left: { backgroundColor: GREY },
-      center: { backgroundColor: GREY },
-      right: { backgroundColor: GREY },
+      left: { backgroundColor: GREYBG },
+      center: { backgroundColor: GREYBG },
+      right: { backgroundColor: GREYBG },
     },
   },
 };
@@ -37,13 +37,14 @@ const appData = localStorage.getItem(APPDATAKEY);
 if (appData) {
   initialState.appData = JSON.parse(appData);
 }
+
 /* ================================================================== */
 
 export const appStateSlice = createSlice({
   name: "appState",
   initialState, //state of appState reducer
   reducers: {
-    //reducer logics
+    /* Reducer Logics */
     addCard: (state: AppState, action: PayloadAction<AddCardAction>) => {
       try {
         let newAppData = Object.assign({}, state.appData);
@@ -57,6 +58,7 @@ export const appStateSlice = createSlice({
         console.error(error);
       }
     },
+
     deleteCard: (state: AppState, action: PayloadAction<DeleteCardAction>) => {
       try {
         let newAppData = Object.assign({}, state.appData);
@@ -70,6 +72,7 @@ export const appStateSlice = createSlice({
         console.error(error);
       }
     },
+
     updateCard: (state: AppState, action: PayloadAction<UpdateCardAction>) => {
       try {
         let newAppData = Object.assign({}, state.appData);
@@ -92,6 +95,7 @@ export const appStateSlice = createSlice({
         console.error(error);
       }
     },
+
     showAddCardModal: (
       state: AppState,
       action: PayloadAction<ShowAddCardModalAction>
@@ -106,6 +110,7 @@ export const appStateSlice = createSlice({
         console.error(error);
       }
     },
+
     closeAddCardModal: (state: AppState) => {
       try {
         state.uiState.addCardModal.visible = false;
@@ -120,16 +125,17 @@ export const appStateSlice = createSlice({
         console.error(error);
       }
     },
+
     changeColumnBg: (state, action: PayloadAction<ChangeColumnBgAction>) => {
       try {
         if (action.payload.color === "grey") {
           state.uiState.columns[
             action.payload.column as keyof ColumnUI
-          ].backgroundColor = GREY;
+          ].backgroundColor = GREYBG;
         } else {
           state.uiState.columns[
             action.payload.column as keyof ColumnUI
-          ].backgroundColor = BLUE;
+          ].backgroundColor = BLUEBG;
         }
       } catch (error) {
         console.error(error);
@@ -148,4 +154,4 @@ export const {
   changeColumnBg,
 } = appStateSlice.actions; //exporting actions for each reducer logic
 
-export default appStateSlice.reducer; //exporting counter reducer logics
+export default appStateSlice.reducer; //exporting appState reducer logics

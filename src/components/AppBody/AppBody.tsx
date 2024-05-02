@@ -10,47 +10,11 @@ import Column from "../Column/Column";
 import styles from "./appBody.module.css";
 
 function AppBody() {
+  /* Redux Dispatcher */
   const dispatch = useDispatch();
 
+  /* Getting App Data from Redux Store*/
   const appData = useSelector((state: RootState) => state.appState.appData);
-
-  /* Core Functions */
-  const handleOnDragEnd = (result: DropResult) => {
-    try {
-      if (
-        result.destination &&
-        result.source.droppableId != result.destination.droppableId
-      ) {
-        const sourceColumn = result.source.droppableId as ColumnType;
-        const sourceColumnIndex = result.source.index;
-        const destColumn = result.destination.droppableId as ColumnType;
-        let cardData = Object.assign(
-          {},
-          appData[sourceColumn as keyof AppData][sourceColumnIndex]
-        );
-        cardData.column = destColumn;
-        dispatch(
-          updateCard({
-            cardData: cardData,
-            prevColumn: sourceColumn,
-            prevIndex: sourceColumnIndex,
-          })
-        );
-      }
-
-      functionResetColumnBg();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleOnDragUpdate = (result: DropResult) => {
-    try {
-      updateColumnBg(result);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   /* Utility Functions */
   const functionResetColumnBg = () => {
@@ -138,6 +102,44 @@ function AppBody() {
           })
         );
       }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /* Core Functions */
+  const handleOnDragEnd = (result: DropResult) => {
+    try {
+      if (
+        result.destination &&
+        result.source.droppableId != result.destination.droppableId
+      ) {
+        const sourceColumn = result.source.droppableId as ColumnType;
+        const sourceColumnIndex = result.source.index;
+        const destColumn = result.destination.droppableId as ColumnType;
+        let cardData = Object.assign(
+          {},
+          appData[sourceColumn as keyof AppData][sourceColumnIndex]
+        );
+        cardData.column = destColumn;
+        dispatch(
+          updateCard({
+            cardData: cardData,
+            prevColumn: sourceColumn,
+            prevIndex: sourceColumnIndex,
+          })
+        );
+      }
+
+      functionResetColumnBg();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleOnDragUpdate = (result: DropResult) => {
+    try {
+      updateColumnBg(result);
     } catch (error) {
       console.error(error);
     }

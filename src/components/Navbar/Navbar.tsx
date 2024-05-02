@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import { showAddCardModal } from "../../redux/reducers/appDataSlice";
 
 function Navbar() {
+  /* Redux Dispatcher */
   const dispatch = useDispatch();
 
   return (
@@ -21,7 +22,6 @@ function Navbar() {
           <Tooltip arrow title="Add new card">
             <IconButton
               size="large"
-              aria-label="add card button"
               color="inherit"
               onClick={() => {
                 dispatch(showAddCardModal({ purpose: "add" }));
